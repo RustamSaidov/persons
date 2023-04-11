@@ -3,17 +3,17 @@ package ru.job4j.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.Service.PersonService;
 import ru.job4j.model.Person;
-import ru.job4j.repository.PersonRepository;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/person")
 public class PersonController {
-    private final PersonRepository persons;
+    private final PersonService persons;
 
-    public PersonController(final PersonRepository persons) {
+    public PersonController(final PersonService persons) {
         this.persons = persons;
     }
 
@@ -40,16 +40,14 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) {
+    public ResponseEntity<Boolean> update(@RequestBody Person person) {
         this.persons.save(person);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        Person person = new Person();
-        person.setId(id);
-        this.persons.delete(person);
+    public ResponseEntity<Boolean> delete(@PathVariable int id) {
+        this.persons.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
